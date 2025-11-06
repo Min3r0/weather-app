@@ -37,8 +37,8 @@ Le diagramme suivant illustre les relations entre les principales classes, inter
 ##📁 Structure du projet
 
 Voici une suggestion d’arborescence respectant le principe de responsabilité unique :
-weather_station_app/
 ```text
+weather_station_app/
 │
 ├── main.py                              # Application entry point
 │
