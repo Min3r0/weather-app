@@ -38,6 +38,7 @@ Le diagramme suivant illustre les relations entre les principales classes, inter
 
 Voici une suggestion d’arborescence respectant le principe de responsabilité unique :
 weather_station_app/
+```text
 │
 ├── main.py                              # Application entry point
 │
@@ -81,3 +82,4 @@ weather_station_app/
 ├── requirements.txt                     # Dependencies
 ├── README.md                            # Project documentation
 └── pyproject.toml / setup.cfg            # Project metadata (optional for packaging)
+```
