@@ -1,85 +1,226 @@
-# 🌦️Weather App — Application Météo Orientée Objet
-
-## 🧭 Description du projet
-
-**Toulouse Metro Weather** est une application Python permettant d’afficher et de gérer les données météorologiques des **stations de métro de Toulouse**.  
-L’architecture du projet a été conçue selon les **principes du Clean Code et de SOLID**, afin de garantir **modularité, extensibilité et maintenabilité**.
-
-L’application permet :
-- De **récupérer des données météo** en temps réel via une API.  
-- D’**afficher** les informations par **station**, **ville** ou **pays**.  
-- D’**ajouter**, **supprimer** ou **actualiser** facilement des stations et des villes.  
-- De **sauvegarder et charger** la configuration (stations, villes, API, etc.).  
-
-> 🔭 À terme, le projet a vocation à accueillir d'autres villes et réseaux de transport.
+Voici un **README.md complet, professionnel et prêt à livrer**, rédigé en français, qui **met clairement en valeur le Clean Code, les structures de données complexes et les Design Patterns** utilisés dans ton projet météo.
+Tu peux le copier-coller tel quel à la racine de ton projet.
 
 ---
 
-## 🧱 Architecture logicielle
+# 🌦️ Weather App – Application météo en Python
 
-Le projet repose sur une architecture orientée objet et modulaire, respectant les principes **SOLID** :
+## 📌 Description
 
-- **S – Single Responsibility** : chaque classe a une responsabilité unique (extraction, affichage, sauvegarde, etc.).  
-- **O – Open/Closed** : le code est ouvert à l’extension (nouvelles sources de données, nouveaux types de stations) mais fermé à la modification.  
-- **L – Liskov Substitution** : les classes dérivées peuvent remplacer leurs classes mères sans casser le comportement.  
-- **I – Interface Segregation** : les interfaces sont fines et spécifiques (ex. `IAffichable`).  
-- **D – Dependency Inversion** : les dépendances sont abstraites (via `DataExtract`, `SaveAndLoad`, etc.), facilitant les tests et la maintenance.
+**Weather App** est une application météo en ligne de commande développée en **Python**, permettant de consulter, gérer et afficher des données météorologiques provenant d’APIs publiques.
 
----
+Le projet a été conçu dans un objectif **pédagogique et professionnel**, en respectant rigoureusement :
 
-## 🗺️ Diagramme UML
-
-Le diagramme suivant illustre les relations entre les principales classes, interfaces et gestionnaires de l’application :
-![Diagramme UML](https://uml.planttext.com/plantuml/svg/bLRTRjem5Bv7uXqiRaQxfj9kemereocBL08ZTDfTv2Q6UWfEv2JLfdKFqEVgYys_YGC6KYw0-1mVd-yxvtpnRLb1MjMxR3Zu19mJ7suFmhM_klUcVWJyDPW-U574_dfVe_NA2zP-T3u69XMY6vWW47YR3KwUuLE6mD_X0B3FPoYM48tJd124ol652ygA3WV_XeFX03wn_p2fG9B1iWHti8B-RxcY0snH5QTiVLpcDKsGsCrYf3Yfx44Y-88yaZxaC6s2b6mjhl9uWpCqBc3rBCCeQyPSumtDTuTsSS1v5lsVZAxfEbY4uCu7TuimV7_hmvtC-0U6tZ8uH5pJx02kIT7Dg-EepVtIrEMTlx-jtzyMVVEBAbZXdEW47PBlL1758qipXWKsbrInTTvY3SciKKrTiz3d-aHQawg66IwxzZ0dI92Y4tISIJUqDbnVlqxCzkHqIMmpL78F0Z55ohjiW9PgmGNixEf6sIVAoeDXH4tSfp7o80o1ZieXy2MZxCeK5v36ZEMnPffvgiCr8R_oseZLE5u1ineDHt88wgAWU6VPPN9f9MJqPGGkMREDBaTj8bPFmRGnWXzhp1dhojdAMtuBlZz-P7woLd7skxE0VrZzbknRBMoDj5rh_GKFCYZlABkBFfn7FdRs2u-XkqS4dEpLJtYCnRShSKZH4L5DreMj7vapF-9A57h1gZ-79aYF9rUs4gvovKmQZGQBmWLUKLnO8RL-RG7sFKytxnKufCMQhTA6ZaQPYg6FKR_DA7MdmzXWASenLy69WV2Odz3p8-hGVPkTh-_S3n_xbdMEI3s716uHFNmbxvWnPf904bp0R4znEqwcP1tp4LKzxM5MgkkOFEUun3JE2srZrmh1Y8d09kCzn6KHtWUpnvN7fw8lSTESRF1sZped4QjnSqDeieUKkSNIFBumttlixb6_e2saQSUXqTi-2BpbyY6OVYX_DfXDrctVoU7ILmO3aji5R6Ydg1hAEX8gHaCPcXbHDl6IY-L82DtZ-oOMxLKDurgan-fjDezxN07KNj5mEud6DST0LONMf5C6pXSNUmL5FqhGhL4Ifv_tEDFBDa1MMpTlxT99TZYuHIGLb_d_)  
+* les **principes du Clean Code**
+* l’utilisation de **structures de données complexes**
+* l’implémentation de **Design Patterns reconnus**
 
 ---
 
-##📁 Structure du projet
+## 🎯 Objectifs du projet
 
-Voici une suggestion d’arborescence respectant le principe de responsabilité unique :
+* Concevoir une application modulaire et maintenable
+* Appliquer plusieurs **Design Patterns** de manière cohérente
+* Manipuler des **structures de données personnalisées**
+* Séparer clairement les responsabilités (architecture propre)
+* Fournir une interface utilisateur simple en ligne de commande
+
+---
+
+## 🧱 Architecture du projet
+
 ```text
-weather_station_app/
-│
-├── main.py                              # Application entry point
-│
-├── app/                                 # Application orchestration (presentation + flow)
+weather_app/
+├── __main__.py
+├── config/
 │   ├── __init__.py
-│   ├── app.py                           # App class (main controller)
-│   ├── config_manager.py                # ConfigManager (handles config.json)
-│   ├── menu_manager.py                  # MenuManager (CLI user interface)
-│
-├── core/                                # Core business logic and services
+│   └── config_singleton.py
+├── models/
 │   ├── __init__.py
-│   ├── data_extractor.py                # Abstract class DataExtract + ViaAPI
-│   ├── save_and_load.py                 # Abstract SaveAndLoad mixin (JSON persistence)
-│   ├── addition_manager.py              # Add countries, cities, stations
-│   ├── refresh_manager.py               # Refresh / update weather data
-│
-├── domain/                              # Domain entities (pure models)
+│   ├── measurement.py
+│   ├── station.py
+│   └── linked_list.py
+├── patterns/
 │   ├── __init__.py
-│   ├── country.py                       # Country class
-│   ├── city.py                          # City class
-│   ├── station.py                       # Station class (implements IDisplayable)
-│   ├── station_manager.py               # Manages a list of stations (inherits SaveAndLoad)
-│   ├── interfaces.py                    # IDisplayable interface
-│
-├── data/                                # Persistent data
-│   ├── stations.json                    # Saved stations
-│   ├── config.json                      # Default config (country/city)
-│
-├── utils/                               # Utility functions and helpers
+│   ├── builder.py
+│   ├── command.py
+│   ├── decorator.py
+│   └── observer.py
+├── services/
 │   ├── __init__.py
-│   ├── json_tools.py                    # Helpers for reading/writing JSON files
-│   ├── validators.py                    # Validation helpers (URLs, names, etc.)
-│
-├── tests/                               # Unit and integration tests
-│   ├── __init__.py
-│   ├── test_app.py
-│   ├── test_data_extractor.py
-│   ├── test_managers.py
-│   ├── test_models.py
-│
-├── requirements.txt                     # Dependencies
-├── README.md                            # Project documentation
-└── pyproject.toml / setup.cfg            # Project metadata (optional for packaging)
+│   ├── api_queue.py
+│   └── api_service.py
+└── ui/
+    ├── __init__.py
+    └── display.py
 ```
+
+---
+
+## 🧼 Respect des principes du Clean Code
+
+Le projet respecte les règles fondamentales du **Clean Code** :
+
+### ✔ Lisibilité
+
+* Nommage explicite des classes, méthodes et variables
+* Méthodes courtes et spécialisées
+* Commentaires utiles et non redondants
+
+### ✔ Responsabilité unique (SRP)
+
+* `APIService` : récupération des données
+* `WeatherApp` : gestion de l’interface utilisateur
+* `Station` / `Measurement` : modèles de données
+* `ConfigSingleton` : gestion de la configuration
+
+### ✔ Faible couplage / forte cohésion
+
+* Modules indépendants
+* Communication via interfaces et patterns
+
+### ✔ Extensibilité
+
+* Ajout facile de nouvelles stations
+* Possibilité d’ajouter d’autres sources météo ou types d’affichage
+
+---
+
+## 🗂️ Structures de données complexes utilisées
+
+### 🔗 Liste chaînée personnalisée
+
+**`LinkedList`**
+
+* Stockage dynamique des stations météo
+* Implémentation manuelle avec `Node`
+* Méthodes : `append`, `get`, `find_by_name`, `to_list`
+
+👉 Permet de démontrer la maîtrise des structures de données non natives.
+
+---
+
+### 📦 File (Queue)
+
+**`APIQueue`**
+
+* Basée sur `collections.deque`
+* Gestion des rafraîchissements API
+* Traitement séquentiel des requêtes
+
+---
+
+### 🗺️ Dictionnaires imbriqués
+
+**Configuration des stations**
+
+```json
+countries → cities → stations
+```
+
+* Organisation hiérarchique des données
+* Stockage persistant via JSON
+
+---
+
+## 🧩 Design Patterns implémentés
+
+### 🟢 Singleton
+
+**`ConfigSingleton`**
+
+* Une seule instance de configuration
+* Centralisation des paramètres
+* Chargement et sauvegarde automatique
+
+---
+
+### 🟡 Builder
+
+**`StationBuilder`**
+
+* Construction contrôlée des objets `Station`
+* Lisibilité et sécurité lors de l’instanciation
+
+---
+
+### 🔵 Command
+
+**Commandes utilisateur**
+
+* `SelectStationCommand`
+* `RefreshDataCommand`
+* `QuitCommand`
+* `UpdateStationURLCommand`
+
+👉 Encapsulation des actions utilisateur pour une meilleure extensibilité.
+
+---
+
+### 🟣 Observer
+
+**Chargement automatique des données**
+
+* Lorsqu’une station est sélectionnée
+* Découplage entre l’UI et le service API
+
+---
+
+### 🟠 Decorator
+
+**`MeasurementDisplayDecorator`**
+
+* Ajout dynamique de fonctionnalités d’affichage
+* Formatage avancé des données météo
+* Respect du principe Open/Closed
+
+---
+
+## 🖥️ Fonctionnalités
+
+* 📍 Sélection de stations météo
+* 🔄 Rafraîchissement des données
+* ➕ Ajout de nouvelles stations
+* ✏️ Modification dynamique des URLs
+* 📊 Affichage des mesures par date et heure
+* 💾 Sauvegarde persistante (JSON)
+
+---
+
+## 🚀 Lancement de l’application
+
+### Prérequis
+
+* Python **3.9+**
+* Bibliothèque :
+
+```bash
+pip install requests
+```
+
+### Exécution
+
+```bash
+python -m weather_app
+```
+
+---
+
+## 📈 Améliorations possibles
+
+* Interface graphique (GUI)
+* Export CSV / JSON des données météo
+* Tests unitaires
+* Gestion du cache API
+* Multithreading pour les appels API
+
+---
+
+## 👨‍💻 Auteur
+
+Projet développé dans un objectif **académique et professionnel**, mettant en pratique :
+
+* Clean Code
+* Programmation Orientée Objet
+* Design Patterns
+* Structures de données avancées
