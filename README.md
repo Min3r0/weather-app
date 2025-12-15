@@ -1,8 +1,3 @@
-Voici un **README.md complet, professionnel et prêt à livrer**, rédigé en français, qui **met clairement en valeur le Clean Code, les structures de données complexes et les Design Patterns** utilisés dans ton projet météo.
-Tu peux le copier-coller tel quel à la racine de ton projet.
-
----
-
 # 🌦️ Weather App – Application météo en Python
 
 ## 📌 Description
