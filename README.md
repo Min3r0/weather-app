@@ -218,7 +218,7 @@ python -m weather_app
 
 ## 👨‍💻 Auteur
 
-Projet développé dans un objectif **académique et professionnel**, mettant en pratique :
+Projet développé dans un objectif **académique**, mettant en pratique :
 
 * Clean Code
 * Programmation Orientée Objet
