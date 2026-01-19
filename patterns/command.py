@@ -14,7 +14,7 @@ class Command(ABC):
     @abstractmethod
     def execute(self) -> Any:
         """Exécute la commande."""
-        pass
+        raise NotImplementedError
 
 
 class SelectStationCommand(Command):

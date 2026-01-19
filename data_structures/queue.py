@@ -1,7 +1,7 @@
 """
 Implémentation d'une File (Queue) pour les extractions API.
 """
-from typing import Any, Optional
+from typing import Any
 from collections import deque
 
 

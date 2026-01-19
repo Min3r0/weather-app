@@ -2,7 +2,7 @@
 Modèles pour les localisations avec héritage.
 Principe SOLID: Open/Closed - ouvert à l'extension, fermé à la modification.
 """
-from typing import List, Optional
+from typing import List
 from abc import ABC, abstractmethod
 
 
