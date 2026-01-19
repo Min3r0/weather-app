@@ -9,29 +9,45 @@ from abc import ABC, abstractmethod
 class Location(ABC):
     """Classe abstraite de base pour toutes les localisations."""
 
-    def __init__(self, id: str, nom: str):
-        self._id = id
+    def __init__(self, identifier: str, nom: str):
+        """
+        Initialise une localisation.
+
+        Args:
+            identifier: Identifiant unique de la localisation
+            nom: Nom de la localisation
+        """
+        self._id = identifier
         self._nom = nom
 
     @property
     def id(self) -> str:
+        """Retourne l'identifiant de la localisation."""
         return self._id
 
     @property
     def nom(self) -> str:
+        """Retourne le nom de la localisation."""
         return self._nom
 
     @abstractmethod
     def get_info(self) -> str:
         """Retourne les informations de la localisation."""
-        pass
+        raise NotImplementedError
 
 
 class Pays(Location):
     """Représente un pays."""
 
-    def __init__(self, id: str, nom: str):
-        super().__init__(id, nom)
+    def __init__(self, identifier: str, nom: str):
+        """
+        Initialise un pays.
+
+        Args:
+            identifier: Identifiant unique du pays
+            nom: Nom du pays
+        """
+        super().__init__(identifier, nom)
         self._villes: List['Ville'] = []
 
     def add_ville(self, ville: 'Ville') -> None:
@@ -51,14 +67,23 @@ class Pays(Location):
 class Ville(Location):
     """Représente une ville, hérite de Location."""
 
-    def __init__(self, id: str, nom: str, pays: Pays):
-        super().__init__(id, nom)
+    def __init__(self, identifier: str, nom: str, pays: Pays):
+        """
+        Initialise une ville.
+
+        Args:
+            identifier: Identifiant unique de la ville
+            nom: Nom de la ville
+            pays: Pays auquel appartient la ville
+        """
+        super().__init__(identifier, nom)
         self._pays = pays
         self._stations: List['Station'] = []
         pays.add_ville(self)
 
     @property
     def pays(self) -> Pays:
+        """Retourne le pays de la ville."""
         return self._pays
 
     def add_station(self, station: 'Station') -> None:
@@ -78,8 +103,17 @@ class Ville(Location):
 class Station(Location):
     """Représente une station météo, hérite de Location."""
 
-    def __init__(self, id: str, nom: str, ville: Ville, api_url: str):
-        super().__init__(id, nom)
+    def __init__(self, identifier: str, nom: str, ville: Ville, api_url: str):
+        """
+        Initialise une station météo.
+
+        Args:
+            identifier: Identifiant unique de la station
+            nom: Nom de la station
+            ville: Ville où se trouve la station
+            api_url: URL de l'API pour récupérer les données
+        """
+        super().__init__(identifier, nom)
         self._ville = ville
         self._api_url = api_url
         self._measurements: List = []
@@ -87,10 +121,12 @@ class Station(Location):
 
     @property
     def ville(self) -> Ville:
+        """Retourne la ville de la station."""
         return self._ville
 
     @property
     def api_url(self) -> str:
+        """Retourne l'URL de l'API de la station."""
         return self._api_url
 
     @api_url.setter
