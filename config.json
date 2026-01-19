@@ -1,0 +1,20 @@
+{
+  "pays": {
+    "c386de9d": {
+      "nom": "France"
+    }
+  },
+  "villes": {
+    "c57de88c": {
+      "nom": "Toulouse",
+      "pays_id": "c386de9d"
+    }
+  },
+  "stations": {
+    "8e82c282": {
+      "nom": "Compans Cafarelli",
+      "ville_id": "c57de88c",
+      "api_url": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/42-station-meteo-toulouse-parc-compans-cafarelli/records?select=heure_de_paris%2C%20humidite%2C%20temperature_en_degre_c%2C%20pression&order_by=heure_de_paris%20DESC&limit=100"
+    }
+  }
+}
