@@ -1,1 +1,9 @@
+# Dépendances pour les tests unitaires
+
+# Framework de test
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Dépendances du projet
 requests==2.31.0
