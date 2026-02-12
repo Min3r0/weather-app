@@ -21,17 +21,32 @@ class ConfigurationSingleton:
 
     def __init__(self):
         if not self._initialized:
+            # Déterminer le répertoire data (compatible Docker et local)
+            # En Docker : /app/data
+            # En local : weather_app/../data
+
+            # Essayer d'abord le chemin Docker
+            docker_data_dir = '/app/data'
+
+            if os.path.exists(docker_data_dir):
+                # On est dans Docker
+                self._data_dir = docker_data_dir
+            else:
+                # On est en local
+                self._data_dir = os.path.join(
+                    os.path.dirname(os.path.dirname(__file__)),
+                    'data'
+                )
+
             # Créer le dossier data s'il n'existe pas
-            self._data_dir = os.path.join(
-                os.path.dirname(os.path.dirname(__file__)),
-                'data'
-            )
             os.makedirs(self._data_dir, exist_ok=True)
 
             self._config_file = os.path.join(self._data_dir, "config.json")
             self._initialize_config()
             self._load_configuration()
             ConfigurationSingleton._initialized = True
+
+            print(f"📂 Configuration chargée depuis : {self._config_file}")
 
     def _initialize_config(self) -> None:
         """Initialise la structure de configuration par défaut."""
@@ -51,6 +66,7 @@ class ConfigurationSingleton:
                     self._config["pays"] = loaded_config.get("pays", {})
                     self._config["villes"] = loaded_config.get("villes", {})
                     self._config["stations"] = loaded_config.get("stations", {})
+                print(f"✅ Configuration chargée avec succès")
             except (json.JSONDecodeError, IOError) as e:
                 print(f"Erreur lors du chargement de la configuration: {e}")
                 self._initialize_config()
@@ -62,6 +78,7 @@ class ConfigurationSingleton:
         try:
             with open(self._config_file, 'w', encoding='utf-8') as f:
                 json.dump(self._config, f, indent=2, ensure_ascii=False)
+            print(f"💾 Configuration sauvegardée dans {self._config_file}")
         except IOError as e:
             print(f"Erreur lors de la sauvegarde: {e}")
 

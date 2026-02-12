@@ -1,15 +1,12 @@
-version: '3.8'
-
 services:
   weather_app:
     build: .
     container_name: weather_app
-    stdin_open: true      # Équivalent à -i (interactif)
-    tty: true             # Équivalent à -t (terminal)
+    stdin_open: true
+    tty: true
     volumes:
-      # Persister la configuration entre les redémarrages
       - ./data:/app/data
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=utf-8
-    restart: "no"         # Ne pas redémarrer automatiquement
+    restart: "no"
