@@ -7,7 +7,19 @@ des menus complexes avec validation et affichage (disable R0914).
 # pylint: disable=too-many-locals
 
 import os
+import sys
 import uuid
+
+# Configuration de l'encodage pour Windows
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Python < 3.7
+        import codecs
+
+        sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+
 from weather_app.config.singleton_config import ConfigurationSingleton
 from weather_app.services.api_service import ApiService
 from weather_app.patterns.observer import StationSelector, DataLoader
@@ -21,6 +33,20 @@ from weather_app.patterns.decorator import display_measurements_decorator
 from weather_app.data_structures.linked_list import LinkedList
 from weather_app.models.location import Pays, Ville, Station
 from weather_app.models.builders import StationBuilder
+
+
+def safe_print(text):
+    """
+    Affiche du texte de manière sûre en gérant les problèmes d'encodage.
+
+    Args:
+        text: Le texte à afficher
+    """
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Remplacer les caractères non supportés
+        print(text.encode('ascii', 'replace').decode('ascii'))
 
 
 class MainMenu:
@@ -50,9 +76,9 @@ class MainMenu:
             title: Le titre à afficher
         """
         self.clear_screen()
-        print("\n" + "=" * 80)
-        print(f"🌤️  {title}".center(80))
-        print("=" * 80 + "\n")
+        safe_print("\n" + "=" * 80)
+        safe_print(f"🌤️  {title}".center(80))
+        safe_print("=" * 80 + "\n")
 
     def get_user_choice(self, prompt: str = "Entrez votre choix: ") -> str:
         """
@@ -90,9 +116,9 @@ class MainMenu:
             self._show_config_menu()
         elif choice == "0":
             self._running = False
-            print("\n👋 Au revoir !")
+            safe_print("\n👋 Au revoir !")
         else:
-            print("\n❌ Choix invalide.")
+            safe_print("\n❌ Choix invalide.")
             self.pause()
 
     def _show_weather_menu(self) -> None:
@@ -103,8 +129,8 @@ class MainMenu:
         stations_list = self._load_stations_to_linked_list()
 
         if stations_list.is_empty():
-            print("⚠️  Aucune station configurée.")
-            print(
+            safe_print("⚠️  Aucune station configurée.")
+            safe_print(
                 "\n💡 Veuillez d'abord ajouter des stations "
                 "dans la configuration."
             )
@@ -128,10 +154,10 @@ class MainMenu:
                 station = stations_list.get(index)
                 self._show_station_details(station)
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
                 self.pause()
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
             self.pause()
 
     def _show_station_details(self, station: Station) -> None:
@@ -147,9 +173,9 @@ class MainMenu:
 
         while True:
             self.display_header(f"STATION: {station.nom}")
-            print(f"📍 Ville: {self._get_ville_name(station)}")
-            print(f"🌍 Pays: {self._get_pays_name(station)}")
-            print(f"📊 Mesures: {len(station.get_measurements())}\n")
+            safe_print(f"📍 Ville: {self._get_ville_name(station)}")
+            safe_print(f"🌍 Pays: {self._get_pays_name(station)}")
+            safe_print(f"📊 Mesures: {len(station.get_measurements())}\n")
 
             print("1. Afficher les mesures")
             print("2. Rafraîchir les données")
@@ -165,7 +191,7 @@ class MainMenu:
             elif choice == "0":
                 break
             else:
-                print("\n❌ Choix invalide.")
+                safe_print("\n❌ Choix invalide.")
                 self.pause()
 
     @display_measurements_decorator
@@ -211,7 +237,7 @@ class MainMenu:
             elif choice == "0":
                 break
             else:
-                print("\n❌ Choix invalide.")
+                safe_print("\n❌ Choix invalide.")
                 self.pause()
 
     def _show_countries_menu(self) -> None:
@@ -234,7 +260,7 @@ class MainMenu:
             elif choice == "0":
                 break
             else:
-                print("\n❌ Choix invalide.")
+                safe_print("\n❌ Choix invalide.")
                 self.pause()
 
     def _list_countries(self) -> None:
@@ -243,11 +269,11 @@ class MainMenu:
         pays = self._config.get_pays()
 
         if not pays:
-            print("⚠️  Aucun pays configuré.")
+            safe_print("⚠️  Aucun pays configuré.")
         else:
             for pays_id, pays_data in pays.items():
                 villes_count = len(self._config.get_villes(pays_id))
-                print(
+                safe_print(
                     f"• {pays_data['nom']} (ID: {pays_id}) - "
                     f"{villes_count} ville(s)"
                 )
@@ -264,7 +290,7 @@ class MainMenu:
             command = AddCountryCommand(self._config, pays_id, nom)
             self._command_invoker.execute_command(command)
         else:
-            print("\n❌ Le nom ne peut pas être vide.")
+            safe_print("\n❌ Le nom ne peut pas être vide.")
 
         self.pause()
 
@@ -274,7 +300,7 @@ class MainMenu:
 
         pays_dict = self._config.get_pays()
         if not pays_dict:
-            print("⚠️  Aucun pays configuré.")
+            safe_print("⚠️  Aucun pays configuré.")
             self.pause()
             return
 
@@ -308,9 +334,9 @@ class MainMenu:
                     command = RemoveCountryCommand(self._config, pays_id)
                     self._command_invoker.execute_command(command)
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
 
         self.pause()
 
@@ -334,7 +360,7 @@ class MainMenu:
             elif choice == "0":
                 break
             else:
-                print("\n❌ Choix invalide.")
+                safe_print("\n❌ Choix invalide.")
                 self.pause()
 
     def _list_cities(self) -> None:
@@ -344,14 +370,14 @@ class MainMenu:
         pays_dict = self._config.get_pays()
 
         if not villes:
-            print("⚠️  Aucune ville configurée.")
+            safe_print("⚠️  Aucune ville configurée.")
         else:
             for ville_id, ville_data in villes.items():
                 pays_name = pays_dict.get(
                     ville_data['pays_id'], {}
                 ).get('nom', 'Inconnu')
                 stations_count = len(self._config.get_stations(ville_id))
-                print(
+                safe_print(
                     f"• {ville_data['nom']} ({pays_name}) "
                     f"(ID: {ville_id}) - {stations_count} station(s)"
                 )
@@ -364,7 +390,7 @@ class MainMenu:
 
         pays_dict = self._config.get_pays()
         if not pays_dict:
-            print(
+            safe_print(
                 "⚠️  Aucun pays configuré. "
                 "Veuillez d'abord ajouter un pays."
             )
@@ -398,11 +424,11 @@ class MainMenu:
                     )
                     self._command_invoker.execute_command(command)
                 else:
-                    print("\n❌ Le nom ne peut pas être vide.")
+                    safe_print("\n❌ Le nom ne peut pas être vide.")
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
 
         self.pause()
 
@@ -414,7 +440,7 @@ class MainMenu:
         pays_dict = self._config.get_pays()
 
         if not villes_dict:
-            print("⚠️  Aucune ville configurée.")
+            safe_print("⚠️  Aucune ville configurée.")
             self.pause()
             return
 
@@ -451,9 +477,9 @@ class MainMenu:
                     command = RemoveCityCommand(self._config, ville_id)
                     self._command_invoker.execute_command(command)
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
 
         self.pause()
 
@@ -480,7 +506,7 @@ class MainMenu:
             elif choice == "0":
                 break
             else:
-                print("\n❌ Choix invalide.")
+                safe_print("\n❌ Choix invalide.")
                 self.pause()
 
     def _list_stations(self) -> None:
@@ -489,7 +515,7 @@ class MainMenu:
         stations = self._config.get_stations()
 
         if not stations:
-            print("⚠️  Aucune station configurée.")
+            safe_print("⚠️  Aucune station configurée.")
         else:
             villes_dict = self._config.get_villes()
             pays_dict = self._config.get_pays()
@@ -501,7 +527,7 @@ class MainMenu:
                     ville.get('pays_id', ''), {}
                 ).get('nom', 'Inconnu')
 
-                print(f"\n• {station_data['nom']}")
+                safe_print(f"\n• {station_data['nom']}")
                 print(f"  ID: {station_id}")
                 print(f"  Ville: {ville_nom} ({pays_nom})")
                 print(f"  URL: {station_data['api_url'][:60]}...")
@@ -514,7 +540,7 @@ class MainMenu:
 
         villes_dict = self._config.get_villes()
         if not villes_dict:
-            print(
+            safe_print(
                 "⚠️  Aucune ville configurée. "
                 "Veuillez d'abord ajouter une ville."
             )
@@ -551,9 +577,9 @@ class MainMenu:
 
                 if nom and api_url:
                     # Test de l'URL
-                    print("\n🔍 Test de l'URL...")
+                    safe_print("\n🔍 Test de l'URL...")
                     if self._api_service.test_api_url(api_url):
-                        print("✅ URL valide !")
+                        safe_print("✅ URL valide !")
                         station_id = str(uuid.uuid4())[:8]
                         command = AddStationCommand(
                             self._config, station_id, nom,
@@ -561,7 +587,7 @@ class MainMenu:
                         )
                         self._command_invoker.execute_command(command)
                     else:
-                        print(
+                        safe_print(
                             "⚠️  L'URL ne semble pas valide, "
                             "mais la station sera ajoutée quand même."
                         )
@@ -576,11 +602,11 @@ class MainMenu:
                             )
                             self._command_invoker.execute_command(command)
                 else:
-                    print("\n❌ Tous les champs sont obligatoires.")
+                    safe_print("\n❌ Tous les champs sont obligatoires.")
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
 
         self.pause()
 
@@ -590,7 +616,7 @@ class MainMenu:
 
         stations_dict = self._config.get_stations()
         if not stations_dict:
-            print("⚠️  Aucune station configurée.")
+            safe_print("⚠️  Aucune station configurée.")
             self.pause()
             return
 
@@ -630,15 +656,15 @@ class MainMenu:
 
                 if new_url:
                     # Test de l'URL
-                    print("\n🔍 Test de l'URL...")
+                    safe_print("\n🔍 Test de l'URL...")
                     if self._api_service.test_api_url(new_url):
-                        print("✅ URL valide !")
+                        safe_print("✅ URL valide !")
                         command = UpdateStationUrlCommand(
                             self._config, station_id, new_url
                         )
                         self._command_invoker.execute_command(command)
                     else:
-                        print("⚠️  L'URL ne semble pas valide.")
+                        safe_print("⚠️  L'URL ne semble pas valide.")
                         confirmation = input(
                             "Mettre à jour quand même ? (o/n): "
                         ).lower()
@@ -648,11 +674,11 @@ class MainMenu:
                             )
                             self._command_invoker.execute_command(command)
                 else:
-                    print("\n❌ L'URL ne peut pas être vide.")
+                    safe_print("\n❌ L'URL ne peut pas être vide.")
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
 
         self.pause()
 
@@ -662,7 +688,7 @@ class MainMenu:
 
         stations_dict = self._config.get_stations()
         if not stations_dict:
-            print("⚠️  Aucune station configurée.")
+            safe_print("⚠️  Aucune station configurée.")
             self.pause()
             return
 
@@ -707,9 +733,9 @@ class MainMenu:
                     )
                     self._command_invoker.execute_command(command)
             else:
-                print("\n❌ Numéro invalide.")
+                safe_print("\n❌ Numéro invalide.")
         except ValueError:
-            print("\n❌ Veuillez entrer un numéro valide.")
+            safe_print("\n❌ Veuillez entrer un numéro valide.")
 
         self.pause()
 
@@ -752,7 +778,7 @@ class MainMenu:
                                .build())
                     stations_list.append(station)
                 except ValueError as e:
-                    print(f"⚠️  Erreur lors de la création de la station: {e}")
+                    safe_print(f"⚠️  Erreur lors de la création de la station: {e}")
 
         return stations_list
 
