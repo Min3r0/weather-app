@@ -20,7 +20,7 @@ class Observer(ABC):
             *args: Arguments positionnels
             **kwargs: Arguments nommés
         """
-        raise NotImplementedError
+        pass
 
 
 class Subject:
